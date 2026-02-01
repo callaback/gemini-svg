@@ -7,7 +7,7 @@ import { GoogleGenAI } from "@google/genai";
 
 // Initialize the client
 // CRITICAL: We use import.meta.env.VITE_GEMINI_API_KEY for Vite compatibility.
-const genAI = new GoogleGenAI(import.meta.env.VITE_GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 /**
  * Generates an SVG string based on the user's prompt.
@@ -31,11 +31,18 @@ export const generateSvgFromPrompt = async (prompt: string): Promise<string> => 
 
     const fullPrompt = `Create an SVG representation of the following object/item: "${prompt}"`;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
-    
-    const result = await model.generateContent(systemPrompt + '\n\n' + fullPrompt);
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-pro-preview',
+      contents: fullPrompt,
+      config: {
+        systemInstruction: systemPrompt,
+        temperature: 0.4, // Lower temperature for more precise code generation
+        topP: 0.95,
+        topK: 40,
+      },
+    });
 
-    const rawText = result.response.text() || '';
+    const rawText = response.text || '';
     
     // Robust cleanup to extract just the SVG part
     const svgMatch = rawText.match(/<svg[\s\S]*?<\/svg>/i);
