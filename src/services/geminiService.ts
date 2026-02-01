@@ -7,7 +7,7 @@ import { GoogleGenAI } from "@google/genai";
 
 // Initialize the client
 // CRITICAL: We use import.meta.env.VITE_GEMINI_API_KEY for Vite compatibility.
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyAVI1swHk0G3Xf64Z5MfUpskz1Ph-TShvc" });
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 /**
  * Generates an SVG string based on the user's prompt.
