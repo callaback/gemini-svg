@@ -31,7 +31,7 @@ export const generateSvgFromPrompt = async (prompt: string): Promise<string> => 
 
     const fullPrompt = `Create an SVG representation of the following object/item: "${prompt}"`;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
     
     const result = await model.generateContent(systemPrompt + '\n\n' + fullPrompt);
 
