@@ -31,18 +31,20 @@ export const generateSvgFromPrompt = async (prompt: string): Promise<string> => 
 
     const fullPrompt = `Create an SVG representation of the following object/item: "${prompt}"`;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: fullPrompt,
-      config: {
-        systemInstruction: systemPrompt,
-        temperature: 0.4, // Lower temperature for more precise code generation
+    const model = ai.getGenerativeModel({ model: 'gemini-3-pro-preview' });
+    
+    const response = await model.generateContent({
+      contents: [
+        { role: 'user', parts: [{ text: systemPrompt + '\n\n' + fullPrompt }] }
+      ],
+      generationConfig: {
+        temperature: 0.4,
         topP: 0.95,
         topK: 40,
       },
     });
 
-    const rawText = response.text || '';
+    const rawText = response.response.text() || '';
     
     // Robust cleanup to extract just the SVG part
     const svgMatch = rawText.match(/<svg[\s\S]*?<\/svg>/i);
